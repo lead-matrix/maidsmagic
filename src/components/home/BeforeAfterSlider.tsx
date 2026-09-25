@@ -19,42 +19,31 @@ const TRANSFORMATIONS: TransformationTab[] = [
     id: "kitchen",
     title: "Gourmet Kitchen & Stovetop",
     room: "Chef Kitchen & Range Hood",
-    // Unsplash high quality realistic before (lived-in/greasy cookware & cluttered counters) vs after (gleaming marble & polished stainless steel)
-    beforeImg: "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?w=1200&auto=format&fit=crop&q=80",
-    afterImg: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&auto=format&fit=crop&q=80",
+    beforeImg: "/images/transformations/kitchen-before.jpg",
+    afterImg: "/images/transformations/kitchen-after.jpg",
     neighborhood: "Canyon Crest Estate",
-    description: "Deep degreasing of marble island counters, stainless steel range hood scrubbed, brass hardware polished, and backsplash grout detailed.",
+    description: "Deep degreasing of marble island counters, Wolf range stove & backsplash scrubbed free of baked grease, stainless steel sink polished to a mirror shine.",
     badge: "Grease & Grime Extraction",
   },
   {
     id: "bath",
     title: "Master Spa Bathroom & Shower",
     room: "Enclosed Glass & Tile Shower",
-    beforeImg: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=1200&auto=format&fit=crop&q=80",
-    afterImg: "https://images.unsplash.com/photo-1620626011761-996317b8d101?w=1200&auto=format&fit=crop&q=80",
+    beforeImg: "/images/transformations/bathroom-before.jpg",
+    afterImg: "/images/transformations/bathroom-after.jpg",
     neighborhood: "Hawarden Hills Residence",
-    description: "Removed stubborn Riverside hard-water scale and soap scum from floor-to-ceiling glass enclosure and hand-scrubbed porous travertine grout.",
+    description: "Eliminated cloudy soap scum from floor-to-ceiling glass enclosure, travertine grout scrubbed bright, mirrors streak-free, and quartz vanity sanitized.",
     badge: "Hard Water Mineral Descale",
   },
   {
     id: "living",
     title: "Living Room & Hardwood",
     room: "Crown Moldings & Floors",
-    beforeImg: "https://images.unsplash.com/photo-1513694203232-719a280e022f?w=1200&auto=format&fit=crop&q=80",
-    afterImg: "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=1200&auto=format&fit=crop&q=80",
+    beforeImg: "/images/transformations/living-before.jpg",
+    afterImg: "/images/transformations/living-after.jpg",
     neighborhood: "Wood Streets Craftsman",
-    description: "HEPA 4-stage pet fur extraction, electrostatic dusting of delicate vintage crown moldings, and warm eco wood buffing.",
+    description: "HEPA 4-stage pet fur extraction from sectional upholstery and oriental rug, hardwood floors buffed and mopped, and all surface clutter organized.",
     badge: "HEPA Pet Fur & Dust Detail",
-  },
-  {
-    id: "turnover",
-    title: "Move-Out Vacant Turnover",
-    room: "Empty Apartment Suite",
-    beforeImg: "https://images.unsplash.com/photo-1502005229762-ee10234b7214?w=1200&auto=format&fit=crop&q=80",
-    afterImg: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=1200&auto=format&fit=crop&q=80",
-    neighborhood: "Orangecrest Property",
-    description: "Full deposit-ready white glove clean. Inside empty closets, wiped blinds, vacuumed baseboards, and sanitized windows.",
-    badge: "100% Deposit Guarantee",
   },
 ];
 
@@ -121,18 +110,16 @@ export function BeforeAfterSlider() {
               className="absolute inset-0 w-full h-full object-cover"
             />
 
-            {/* "BEFORE" Image (Messy / Dirty / Cluttered) */}
+            {/* "BEFORE" Image (Messy / Dirty / Cluttered) - Clipped precisely via clip-path */}
             <div
-              className="absolute inset-0 overflow-hidden"
-              style={{ width: `${sliderPosition}%` }}
+              className="absolute inset-0 overflow-hidden pointer-events-none"
+              style={{ clipPath: `inset(0 ${100 - sliderPosition}% 0 0)` }}
             >
               <img
                 src={current.beforeImg}
                 alt={`${current.title} Before Clean`}
-                className="absolute inset-0 w-full h-full object-cover max-w-none"
-                style={{ width: "100%", height: "100%", filter: "contrast(0.95) saturate(0.85) brightness(0.88)" }}
+                className="absolute inset-0 w-full h-full object-cover"
               />
-              <div className="absolute inset-0 bg-slate-950/20" />
             </div>
 
             {/* Divider Line */}
