@@ -11,8 +11,8 @@ export async function calculateQuoteAction(params: QuoteCalculatorValues) {
     throw new Error("Invalid quote parameters");
   }
 
-  const quote = calculateCleaningQuote(parsed.data);
-  return { success: true, quote };
+  const scope = calculateCleaningQuote(parsed.data);
+  return { success: true, scope };
 }
 
 export async function captureAbandonedQuoteLeadAction(payload: {
@@ -25,7 +25,6 @@ export async function captureAbandonedQuoteLeadAction(payload: {
   serviceType: string;
   frequency: "one_time" | "weekly" | "bi_weekly" | "monthly";
   addOns: string[];
-  estimatedPrice: number;
   zipCode?: string;
   neighborhood?: string;
 }) {
@@ -45,10 +44,9 @@ export async function captureAbandonedQuoteLeadAction(payload: {
           service_type: payload.serviceType,
           frequency: payload.frequency,
           add_ons: payload.addOns,
-          estimated_price: payload.estimatedPrice,
           zip_code: payload.zipCode,
           neighborhood: payload.neighborhood,
-          status: "lead_captured",
+          status: "inquiry_received",
         },
       ]);
     } catch (err) {
@@ -59,15 +57,14 @@ export async function captureAbandonedQuoteLeadAction(payload: {
   return {
     success: true,
     quoteId,
-    message: "Lead recorded for dispatch follow-up.",
+    message: "Inquiry recorded for dispatch concierge outreach.",
   };
 }
 
 export async function sendQuoteRecoveryAction(quoteId: string, channel: "email" | "sms") {
-  // In production, this triggers Resend email or Twilio SMS with 10% coupon code
   return {
     success: true,
-    message: `Recovery ${channel.toUpperCase()} sent with promo code "RIVERSIDE10" for 10% off!`,
+    message: `Follow-up ${channel.toUpperCase()} dispatched to customer regarding their custom Riverside cleaning plan!`,
     quoteId,
     timestamp: new Date().toISOString(),
   };

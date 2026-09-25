@@ -18,10 +18,10 @@ interface Step1Props {
 }
 
 const iconMap: Record<string, React.ReactNode> = {
-  Sparkles: <Sparkles className="w-5 h-5 text-emerald-600" />,
-  ShieldCheck: <ShieldCheck className="w-5 h-5 text-emerald-600" />,
-  Home: <Home className="w-5 h-5 text-emerald-600" />,
-  BedDouble: <BedDouble className="w-5 h-5 text-emerald-600" />,
+  Sparkles: <Sparkles className="w-5 h-5 text-blue-600" />,
+  ShieldCheck: <ShieldCheck className="w-5 h-5 text-blue-600" />,
+  Home: <Home className="w-5 h-5 text-blue-600" />,
+  BedDouble: <BedDouble className="w-5 h-5 text-blue-600" />,
   Zap: <Zap className="w-5 h-5 text-amber-500" />,
 };
 
@@ -43,7 +43,7 @@ export function Step1PropertySpecs({
       {/* 1. Cleaning Service Selection */}
       <div className="space-y-3">
         <label className="block text-sm font-bold text-slate-900">
-          1. Select Cleaning Service Type
+          1. Select Your Cleaning Package
         </label>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
           {SERVICES_CATALOG.map((service) => {
@@ -56,24 +56,24 @@ export function Step1PropertySpecs({
                 onClick={() => setServiceSlug(service.slug)}
                 className={`text-left p-4 rounded-xl border-2 transition-all relative flex flex-col justify-between ${
                   isSelected
-                    ? "border-emerald-600 bg-emerald-50/70 shadow-md ring-1 ring-emerald-600"
+                    ? "border-blue-600 bg-blue-50/80 shadow-md ring-1 ring-blue-600"
                     : "border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50/50"
                 }`}
               >
                 {isSelected && (
-                  <span className="absolute top-2.5 right-2.5 flex h-2 w-2 rounded-full bg-emerald-600" />
+                  <span className="absolute top-2.5 right-2.5 flex h-2.5 w-2.5 rounded-full bg-blue-600 ring-2 ring-blue-200" />
                 )}
                 <div>
                   <div className="flex items-center gap-2 mb-2">
                     <div className="p-1.5 rounded-lg bg-white border border-slate-100 shadow-xs">
-                      {iconMap[service.iconName] || <Sparkles className="w-4 h-4 text-emerald-600" />}
+                      {iconMap[service.iconName] || <Sparkles className="w-4 h-4 text-blue-600" />}
                     </div>
-                    <span className="text-xs font-semibold uppercase tracking-wider text-emerald-800">
-                      From ${service.basePrice}
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-blue-800">
+                      ~{service.estimatedHoursBase} hrs scope
                     </span>
                   </div>
                   <h4 className="text-sm font-bold text-slate-900 mb-1">{service.title}</h4>
-                  <p className="text-xs text-slate-500 line-clamp-2">{service.description}</p>
+                  <p className="text-xs text-slate-500 line-clamp-2">{service.tagline}</p>
                 </div>
               </button>
             );
@@ -88,9 +88,9 @@ export function Step1PropertySpecs({
             <label className="text-sm font-bold text-slate-900 block">
               2. Home Square Footage
             </label>
-            <p className="text-xs text-slate-500">Approximate interior heated living area</p>
+            <p className="text-xs text-slate-500">Approximate interior living space</p>
           </div>
-          <div className="px-3.5 py-1.5 rounded-xl bg-white border border-slate-200 shadow-xs font-mono font-bold text-base text-emerald-800">
+          <div className="px-3.5 py-1.5 rounded-xl bg-white border border-blue-200 shadow-xs font-mono font-bold text-base text-blue-900">
             {squareFootage.toLocaleString()} sq ft
           </div>
         </div>
@@ -102,7 +102,7 @@ export function Step1PropertySpecs({
           step={50}
           value={squareFootage}
           onChange={(e) => setSquareFootage(Number(e.target.value))}
-          className="w-full h-2.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-emerald-700"
+          className="w-full h-2.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-700"
         />
 
         <div className="flex justify-between text-[11px] text-slate-400 font-medium">
@@ -198,9 +198,9 @@ export function Step1PropertySpecs({
         <button
           type="button"
           onClick={onNext}
-          className="px-8 py-3.5 rounded-xl bg-emerald-800 hover:bg-emerald-700 text-white font-bold text-sm shadow-md transition-all active:scale-95"
+          className="px-8 py-3.5 rounded-xl bg-blue-700 hover:bg-blue-600 text-white font-bold text-sm shadow-md transition-all active:scale-95"
         >
-          Continue to Luxury Add-Ons →
+          Continue to Focus Add-Ons →
         </button>
       </div>
     </div>

@@ -6,7 +6,7 @@ import { Step2AddOnSelector } from "./Step2AddOnSelector";
 import { Step3ScheduleContact } from "./Step3ScheduleContact";
 import { BookingSummaryCard } from "./BookingSummaryCard";
 import { BookingConfirmationModal } from "./BookingConfirmationModal";
-import { calculateCleaningQuote } from "@/lib/utils/pricing-calculator";
+import { SERVICES_CATALOG, ADDONS_CATALOG } from "@/lib/constants/riverside-data";
 import { CleaningFrequency } from "@/lib/types";
 import { createBookingAction } from "@/actions/booking-actions";
 import { Sparkles, Check, Home, Shield, Calendar } from "lucide-react";
@@ -46,18 +46,20 @@ export function InstantQuoteEngine() {
   const [errors, setErrors] = useState<Record<string, string[]>>({});
   const [confirmedBooking, setConfirmedBooking] = useState<any | null>(null);
 
-  // Live calculated quote
-  const calculatedQuote = useMemo(() => {
-    return calculateCleaningQuote({
-      serviceSlug,
-      squareFootage,
-      bedrooms,
-      bathrooms,
-      halfBathrooms,
-      selectedAddOns,
-      frequency,
-    });
-  }, [serviceSlug, squareFootage, bedrooms, bathrooms, halfBathrooms, selectedAddOns, frequency]);
+  // Calculated duration
+  const estimatedHours = useMemo(() => {
+    const service =
+      SERVICES_CATALOG.find((s) => s.slug === serviceSlug) || SERVICES_CATALOG[0];
+    const addOnsMinutes = selectedAddOns.reduce((sum, slug) => {
+      const addon = ADDONS_CATALOG.find((a) => a.slug === slug);
+      return sum + (addon ? addon.estimatedMinutes : 0);
+    }, 0);
+
+    const base = service.estimatedHoursBase;
+    const sqftExtra = (squareFootage / 1000) * 0.65;
+    const rooms = bedrooms * 0.25 + bathrooms * 0.35;
+    return Math.round((base + sqftExtra + rooms + addOnsMinutes / 60) * 2) / 2;
+  }, [serviceSlug, squareFootage, bedrooms, bathrooms, selectedAddOns]);
 
   const toggleAddOn = (slug: string) => {
     setSelectedAddOns((prev) =>
@@ -101,6 +103,14 @@ export function InstantQuoteEngine() {
         // Also sync to localStorage for immediate instant reflect in /admin portal
         try {
           const existing = JSON.parse(localStorage.getItem("maidsmagic_custom_bookings") || "[]");
+          const selectedService = SERVICES_CATALOG.find((s) => s.slug === serviceSlug);
+          const addOnsList = selectedAddOns
+            .map((slug) => {
+              const a = ADDONS_CATALOG.find((item) => item.slug === slug);
+              return a ? { slug: a.slug, name: a.name } : null;
+            })
+            .filter(Boolean);
+
           const newBookingItem = {
             id: res.booking.id,
             bookingReference: res.booking.bookingReference,
@@ -108,17 +118,13 @@ export function InstantQuoteEngine() {
             customerEmail: res.booking.customerEmail,
             customerPhone: res.booking.customerPhone,
             serviceId: serviceSlug,
-            serviceTitle: res.booking.serviceTitle,
+            serviceTitle: selectedService?.title || res.booking.serviceTitle,
             squareFootage,
             bedrooms,
             bathrooms,
             halfBathrooms,
-            addOns: calculatedQuote.addOnsList,
+            addOns: addOnsList,
             frequency,
-            frequencyDiscountPercent: calculatedQuote.frequencyDiscountPercent,
-            subtotal: calculatedQuote.subtotal,
-            discountAmount: calculatedQuote.discountAmount,
-            finalTotal: calculatedQuote.finalTotal,
             serviceDate: res.booking.serviceDate,
             serviceTimeSlot: res.booking.serviceTimeSlot,
             addressLine1,
@@ -130,11 +136,14 @@ export function InstantQuoteEngine() {
             entryInstructions,
             specialNotes,
             status: "pending",
+            priorityTag: "VIP Riverside",
+            paymentStatus: "unpaid",
+            internalCrmNotes: "Online direct booking request. Instant slot reserved.",
+            estimatedHours,
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
           };
           localStorage.setItem("maidsmagic_custom_bookings", JSON.stringify([newBookingItem, ...existing]));
-          // Dispatch custom event for cross-tab or current-tab sync
           window.dispatchEvent(new Event("maidsmagic_booking_created"));
         } catch {
           // ignore
@@ -151,19 +160,19 @@ export function InstantQuoteEngine() {
   };
 
   return (
-    <section id="quote-engine" className="py-20 bg-white relative">
+    <section id="book-now" className="py-20 bg-white relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Title Header */}
         <div className="text-center max-w-3xl mx-auto mb-12 space-y-3">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-semibold">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-100 text-blue-900 text-xs font-bold">
             <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-            <span>Interactive 3-Step Calculator</span>
+            <span>Effortless 3-Step Booking Engine</span>
           </div>
           <h2 className="text-3xl sm:text-4xl font-serif font-bold text-slate-900 tracking-tight">
-            Calculate & Book Your Riverside Clean
+            Customize & Reserve Your Riverside Clean
           </h2>
           <p className="text-slate-600 text-sm sm:text-base">
-            Customize your square footage, select luxury add-ons, and lock in recurring savings. 100% transparent pricing—no hidden travel fees.
+            Select your home specs, customize focus add-on areas, and hold your preferred Riverside arrival window. Zero upfront charge.
           </p>
         </div>
 
@@ -176,9 +185,9 @@ export function InstantQuoteEngine() {
               onClick={() => setCurrentStep(1)}
               className={`p-3 rounded-xl border flex items-center justify-center gap-2 transition-all ${
                 currentStep === 1
-                  ? "bg-emerald-800 text-white border-emerald-800 shadow-md"
+                  ? "bg-blue-700 text-white border-blue-700 shadow-md"
                   : currentStep > 1
-                  ? "bg-emerald-50 text-emerald-900 border-emerald-300 font-medium"
+                  ? "bg-blue-50 text-blue-900 border-blue-300 font-medium"
                   : "bg-slate-50 text-slate-500 border-slate-200"
               }`}
             >
@@ -187,7 +196,7 @@ export function InstantQuoteEngine() {
                   currentStep === 1
                     ? "bg-amber-400 text-slate-950"
                     : currentStep > 1
-                    ? "bg-emerald-700 text-white"
+                    ? "bg-blue-800 text-white"
                     : "bg-slate-200 text-slate-600"
                 }`}
               >
@@ -202,9 +211,9 @@ export function InstantQuoteEngine() {
               onClick={() => setCurrentStep(2)}
               className={`p-3 rounded-xl border flex items-center justify-center gap-2 transition-all ${
                 currentStep === 2
-                  ? "bg-emerald-800 text-white border-emerald-800 shadow-md"
+                  ? "bg-blue-700 text-white border-blue-700 shadow-md"
                   : currentStep > 2
-                  ? "bg-emerald-50 text-emerald-900 border-emerald-300 font-medium"
+                  ? "bg-blue-50 text-blue-900 border-blue-300 font-medium"
                   : "bg-slate-50 text-slate-500 border-slate-200"
               }`}
             >
@@ -213,13 +222,13 @@ export function InstantQuoteEngine() {
                   currentStep === 2
                     ? "bg-amber-400 text-slate-950"
                     : currentStep > 2
-                    ? "bg-emerald-700 text-white"
+                    ? "bg-blue-800 text-white"
                     : "bg-slate-200 text-slate-600"
                 }`}
               >
                 {currentStep > 2 ? <Check className="w-3.5 h-3.5 stroke-[3]" /> : "2"}
               </div>
-              <span className="text-xs font-bold hidden sm:inline">2. Luxury Add-Ons</span>
+              <span className="text-xs font-bold hidden sm:inline">2. Focus Add-Ons</span>
             </button>
 
             {/* Step 3 Pill */}
@@ -228,7 +237,7 @@ export function InstantQuoteEngine() {
               onClick={() => setCurrentStep(3)}
               className={`p-3 rounded-xl border flex items-center justify-center gap-2 transition-all ${
                 currentStep === 3
-                  ? "bg-emerald-800 text-white border-emerald-800 shadow-md"
+                  ? "bg-blue-700 text-white border-blue-700 shadow-md"
                   : "bg-slate-50 text-slate-500 border-slate-200"
               }`}
             >
@@ -241,7 +250,7 @@ export function InstantQuoteEngine() {
               >
                 3
               </div>
-              <span className="text-xs font-bold hidden sm:inline">3. Schedule & Info</span>
+              <span className="text-xs font-bold hidden sm:inline">3. Schedule & Reserve</span>
             </button>
           </div>
         </div>
@@ -309,7 +318,16 @@ export function InstantQuoteEngine() {
 
           {/* Right Column: Live Sticky Summary Card */}
           <div className="lg:col-span-4">
-            <BookingSummaryCard quote={calculatedQuote} currentStep={currentStep} />
+            <BookingSummaryCard
+              serviceSlug={serviceSlug}
+              squareFootage={squareFootage}
+              bedrooms={bedrooms}
+              bathrooms={bathrooms}
+              halfBathrooms={halfBathrooms}
+              selectedAddOns={selectedAddOns}
+              frequency={frequency}
+              estimatedHours={estimatedHours}
+            />
           </div>
         </div>
       </div>

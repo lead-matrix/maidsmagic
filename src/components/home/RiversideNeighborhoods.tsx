@@ -46,8 +46,8 @@ export function RiversideNeighborhoods() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-14 space-y-3">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-semibold">
-            <MapPin className="w-3.5 h-3.5 text-emerald-700" />
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-100 text-blue-900 text-xs font-bold">
+            <MapPin className="w-3.5 h-3.5 text-blue-700" />
             <span>Local Riverside Service Zones</span>
           </div>
           <h2 className="text-3xl sm:text-4xl font-serif font-bold text-slate-900 tracking-tight">
@@ -75,12 +75,12 @@ export function RiversideNeighborhoods() {
                   setZipInput(e.target.value);
                   setZipResult({ checked: false, covered: false });
                 }}
-                className="w-full pl-10 pr-3 py-2.5 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-600 text-slate-900 font-mono"
+                className="w-full pl-10 pr-3 py-2.5 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 text-slate-900 font-mono"
               />
             </div>
             <button
               type="submit"
-              className="px-6 py-2.5 rounded-xl bg-emerald-800 hover:bg-emerald-700 text-white font-bold text-xs sm:text-sm shadow-md transition-all shrink-0"
+              className="px-6 py-2.5 rounded-xl bg-blue-700 hover:bg-blue-600 text-white font-bold text-xs sm:text-sm shadow-md transition-all shrink-0"
             >
               Verify Coverage
             </button>
@@ -92,11 +92,11 @@ export function RiversideNeighborhoods() {
               animate={{ opacity: 1, y: 0 }}
               className={`mt-3 p-3.5 rounded-xl text-xs flex items-center gap-2.5 ${
                 zipResult.covered
-                  ? "bg-emerald-50 text-emerald-900 border border-emerald-200"
+                  ? "bg-blue-50 text-blue-950 border border-blue-200"
                   : "bg-amber-50 text-amber-900 border border-amber-200"
               }`}
             >
-              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+              <CheckCircle2 className="w-4 h-4 text-blue-600 shrink-0" />
               {zipResult.covered ? (
                 <div>
                   <strong>Great news!</strong> Zip code <span className="font-mono font-bold">{zipInput}</span> ({zipResult.area}) has daily active dispatch teams available.
@@ -119,11 +119,11 @@ export function RiversideNeighborhoods() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.4, delay: idx * 0.06 }}
-              className="p-5 rounded-2xl bg-white border border-slate-200/80 shadow-xs hover:shadow-md transition-all flex flex-col justify-between group hover:border-emerald-300"
+              className="p-5 rounded-2xl bg-white border border-slate-200/80 shadow-xs hover:shadow-md transition-all flex flex-col justify-between group hover:border-blue-300"
             >
               <div>
                 <div className="flex items-center justify-between mb-3">
-                  <span className="font-mono text-xs font-bold text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-md">
+                  <span className="font-mono text-xs font-bold text-blue-800 bg-blue-50 px-2.5 py-1 rounded-md">
                     {item.zip}
                   </span>
                   <span className="text-[10px] uppercase font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full">
@@ -131,7 +131,7 @@ export function RiversideNeighborhoods() {
                   </span>
                 </div>
 
-                <h3 className="text-base font-serif font-bold text-slate-900 group-hover:text-emerald-800 transition-colors">
+                <h3 className="text-base font-serif font-bold text-slate-900 group-hover:text-blue-800 transition-colors">
                   {item.name}
                 </h3>
                 <p className="text-xs text-slate-500 mt-1 leading-relaxed">

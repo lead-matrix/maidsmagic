@@ -7,16 +7,30 @@ import { LiveOrderBoard } from "@/components/admin/LiveOrderBoard";
 import { LiveChatInbox } from "@/components/admin/LiveChatInbox";
 import { AbandonedQuotesConsole } from "@/components/admin/AbandonedQuotesConsole";
 import { CleanerDispatcher } from "@/components/admin/CleanerDispatcher";
+import { CustomerDatabaseCRM } from "@/components/admin/CustomerDatabaseCRM";
+import { ServicesConfiguratorCRM } from "@/components/admin/ServicesConfiguratorCRM";
 import {
   INITIAL_BOOKINGS,
   INITIAL_QUOTES,
   INITIAL_CHAT_CONVERSATIONS,
 } from "@/lib/store/mock-data";
 import { BookingLead, BookingStatus, ChatConversation, ChatMessage, QuoteLead } from "@/lib/types";
-import { LayoutGrid, MessageSquare, Tag, Users, Sparkles, PlusCircle } from "lucide-react";
+import {
+  LayoutGrid,
+  MessageSquare,
+  Tag,
+  Users,
+  Sparkles,
+  Sliders,
+  UserCheck,
+  CalendarCheck,
+} from "lucide-react";
 
 export default function AdminCommandCenterPage() {
-  const [activeTab, setActiveTab] = useState<"orders" | "chat" | "quotes" | "cleaners">("orders");
+  const [activeTab, setActiveTab] = useState<
+    "orders" | "chat" | "quotes" | "customers" | "cleaners" | "services"
+  >("orders");
+
   const [bookings, setBookings] = useState<BookingLead[]>(INITIAL_BOOKINGS);
   const [quotes, setQuotes] = useState<QuoteLead[]>(INITIAL_QUOTES);
   const [conversations, setConversations] = useState<ChatConversation[]>(INITIAL_CHAT_CONVERSATIONS);
@@ -33,8 +47,9 @@ export default function AdminCommandCenterPage() {
         );
         if (Array.isArray(customBookings) && customBookings.length > 0) {
           const combined = [...customBookings, ...INITIAL_BOOKINGS];
-          // Remove duplicate IDs
-          const uniqueBookings = Array.from(new Map(combined.map((b) => [b.id, b])).values());
+          const uniqueBookings = Array.from(
+            new Map(combined.map((b) => [b.id, b])).values()
+          );
           setBookings(uniqueBookings);
         } else {
           setBookings(INITIAL_BOOKINGS);
@@ -50,7 +65,9 @@ export default function AdminCommandCenterPage() {
         );
         if (Array.isArray(customChats) && customChats.length > 0) {
           const combinedChats = [...customChats, ...INITIAL_CHAT_CONVERSATIONS];
-          const uniqueChats = Array.from(new Map(combinedChats.map((c) => [c.id, c])).values());
+          const uniqueChats = Array.from(
+            new Map(combinedChats.map((c) => [c.id, c])).values()
+          );
           setConversations(uniqueChats);
         } else {
           setConversations(INITIAL_CHAT_CONVERSATIONS);
@@ -60,13 +77,12 @@ export default function AdminCommandCenterPage() {
       }
     }
 
-    setTimeout(() => setIsRefreshing(false), 500);
+    setTimeout(() => setIsRefreshing(false), 400);
   }, []);
 
   useEffect(() => {
     loadData();
 
-    // Listen to real-time events triggered by frontend booking or chat
     const handleBookingCreated = () => loadData();
     const handleChatUpdated = () => loadData();
 
@@ -98,6 +114,30 @@ export default function AdminCommandCenterPage() {
       const updated = prev.map((b) =>
         b.id === bookingId ? { ...b, cleanerId, updatedAt: new Date().toISOString() } : b
       );
+      if (typeof window !== "undefined") {
+        localStorage.setItem("maidsmagic_custom_bookings", JSON.stringify(updated));
+      }
+      return updated;
+    });
+  };
+
+  // Internal CRM Notes Updater
+  const handleUpdateNotes = (bookingId: string, notes: string) => {
+    setBookings((prev) => {
+      const updated = prev.map((b) =>
+        b.id === bookingId ? { ...b, internalCrmNotes: notes, updatedAt: new Date().toISOString() } : b
+      );
+      if (typeof window !== "undefined") {
+        localStorage.setItem("maidsmagic_custom_bookings", JSON.stringify(updated));
+      }
+      return updated;
+    });
+  };
+
+  // Add Manual Booking
+  const handleAddNewBooking = (newBooking: BookingLead) => {
+    setBookings((prev) => {
+      const updated = [newBooking, ...prev];
       if (typeof window !== "undefined") {
         localStorage.setItem("maidsmagic_custom_bookings", JSON.stringify(updated));
       }
@@ -144,7 +184,7 @@ export default function AdminCommandCenterPage() {
         q.id === quoteId
           ? {
               ...q,
-              status: "contacted",
+              status: "consultation_scheduled",
               recoveryEmailSent: type === "email" ? true : q.recoveryEmailSent,
               recoverySmsSent: type === "sms" ? true : q.recoverySmsSent,
             }
@@ -154,7 +194,7 @@ export default function AdminCommandCenterPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-100 flex flex-col selection:bg-emerald-900 selection:text-amber-200">
+    <div className="min-h-screen bg-slate-100 flex flex-col selection:bg-blue-900 selection:text-white">
       {/* Admin Top Header */}
       <AdminHeader onRefresh={loadData} isRefreshing={isRefreshing} />
 
@@ -164,21 +204,25 @@ export default function AdminCommandCenterPage() {
         <MetricsOverview bookings={bookings} quotes={quotes} />
 
         {/* Tab Navigation Navigation Bar */}
-        <div className="flex items-center justify-between border-b border-slate-200 overflow-x-auto gap-2 pb-px">
-          <div className="flex items-center gap-2">
+        <div className="flex items-center justify-between border-b border-slate-200 overflow-x-auto gap-2 pb-px bg-white p-2 rounded-2xl shadow-xs">
+          <div className="flex items-center gap-1.5 flex-wrap">
             {/* 1. Live Order Board */}
             <button
               type="button"
               onClick={() => setActiveTab("orders")}
-              className={`px-4 py-3 text-xs sm:text-sm font-bold border-b-2 flex items-center gap-2 transition-all shrink-0 ${
+              className={`px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all ${
                 activeTab === "orders"
-                  ? "border-emerald-700 text-emerald-900 bg-white/60 rounded-t-xl"
-                  : "border-transparent text-slate-500 hover:text-slate-900"
+                  ? "bg-blue-700 text-white shadow-sm"
+                  : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
               }`}
             >
               <LayoutGrid className="w-4 h-4" />
               <span>Live Order Board</span>
-              <span className="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[11px]">
+              <span
+                className={`px-1.5 py-0.2 rounded-full text-[10px] ${
+                  activeTab === "orders" ? "bg-blue-900 text-white" : "bg-slate-200 text-slate-700"
+                }`}
+              >
                 {bookings.length}
               </span>
             </button>
@@ -187,48 +231,84 @@ export default function AdminCommandCenterPage() {
             <button
               type="button"
               onClick={() => setActiveTab("chat")}
-              className={`px-4 py-3 text-xs sm:text-sm font-bold border-b-2 flex items-center gap-2 transition-all shrink-0 ${
+              className={`px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all ${
                 activeTab === "chat"
-                  ? "border-emerald-700 text-emerald-900 bg-white/60 rounded-t-xl"
-                  : "border-transparent text-slate-500 hover:text-slate-900"
+                  ? "bg-blue-700 text-white shadow-sm"
+                  : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
               }`}
             >
               <MessageSquare className="w-4 h-4" />
               <span>Communication Hub</span>
-              <span className="px-2 py-0.5 rounded-full bg-amber-100 text-amber-900 text-[11px]">
+              <span
+                className={`px-1.5 py-0.2 rounded-full text-[10px] ${
+                  activeTab === "chat" ? "bg-blue-900 text-white" : "bg-amber-100 text-amber-900"
+                }`}
+              >
                 {conversations.length}
               </span>
             </button>
 
-            {/* 3. Abandoned Quotes Recovery */}
+            {/* 3. Inquiries CRM */}
             <button
               type="button"
               onClick={() => setActiveTab("quotes")}
-              className={`px-4 py-3 text-xs sm:text-sm font-bold border-b-2 flex items-center gap-2 transition-all shrink-0 ${
+              className={`px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all ${
                 activeTab === "quotes"
-                  ? "border-emerald-700 text-emerald-900 bg-white/60 rounded-t-xl"
-                  : "border-transparent text-slate-500 hover:text-slate-900"
+                  ? "bg-blue-700 text-white shadow-sm"
+                  : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
               }`}
             >
               <Tag className="w-4 h-4" />
-              <span>Quote Recovery Console</span>
-              <span className="px-2 py-0.5 rounded-full bg-slate-200 text-slate-700 text-[11px]">
+              <span>Inquiries Pipeline</span>
+              <span
+                className={`px-1.5 py-0.2 rounded-full text-[10px] ${
+                  activeTab === "quotes" ? "bg-blue-900 text-white" : "bg-slate-200 text-slate-700"
+                }`}
+              >
                 {quotes.length}
               </span>
             </button>
 
-            {/* 4. Crew Dispatcher */}
+            {/* 4. Customer Database CRM */}
+            <button
+              type="button"
+              onClick={() => setActiveTab("customers")}
+              className={`px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all ${
+                activeTab === "customers"
+                  ? "bg-blue-700 text-white shadow-sm"
+                  : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+              }`}
+            >
+              <UserCheck className="w-4 h-4" />
+              <span>Customer CRM</span>
+            </button>
+
+            {/* 5. Crew Dispatcher */}
             <button
               type="button"
               onClick={() => setActiveTab("cleaners")}
-              className={`px-4 py-3 text-xs sm:text-sm font-bold border-b-2 flex items-center gap-2 transition-all shrink-0 ${
+              className={`px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all ${
                 activeTab === "cleaners"
-                  ? "border-emerald-700 text-emerald-900 bg-white/60 rounded-t-xl"
-                  : "border-transparent text-slate-500 hover:text-slate-900"
+                  ? "bg-blue-700 text-white shadow-sm"
+                  : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
               }`}
             >
               <Users className="w-4 h-4" />
               <span>Crew Dispatcher</span>
+            </button>
+
+            {/* 6. Services Configurator */}
+            <button
+              type="button"
+              onClick={() => setActiveTab("services")}
+              className={`px-3.5 py-2 rounded-xl text-xs font-bold flex items-center gap-2 transition-all ${
+                activeTab === "services"
+                  ? "bg-blue-700 text-white shadow-sm"
+                  : "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+              }`}
+            >
+              <Sliders className="w-4 h-4" />
+              <span>Scope Configurator</span>
             </button>
           </div>
         </div>
@@ -239,6 +319,8 @@ export default function AdminCommandCenterPage() {
             bookings={bookings}
             onUpdateStatus={handleUpdateStatus}
             onAssignCleaner={handleAssignCleaner}
+            onUpdateNotes={handleUpdateNotes}
+            onAddNewBooking={handleAddNewBooking}
           />
         )}
 
@@ -257,9 +339,11 @@ export default function AdminCommandCenterPage() {
           />
         )}
 
-        {activeTab === "cleaners" && (
-          <CleanerDispatcher bookings={bookings} />
-        )}
+        {activeTab === "customers" && <CustomerDatabaseCRM />}
+
+        {activeTab === "cleaners" && <CleanerDispatcher bookings={bookings} />}
+
+        {activeTab === "services" && <ServicesConfiguratorCRM />}
       </main>
     </div>
   );

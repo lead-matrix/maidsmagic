@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Phone, Mail, MapPin, Sparkles, Shield, Clock, Heart, Award, ArrowUpRight } from "lucide-react";
+import { Phone, Mail, MapPin, Sparkles, Shield, Clock, Award, ArrowUpRight } from "lucide-react";
 import { RIVERSIDE_COMPANY_INFO, RIVERSIDE_NEIGHBORHOODS } from "@/lib/constants/riverside-data";
 
 export function Footer() {
@@ -10,16 +10,25 @@ export function Footer() {
           {/* Brand & Address Column */}
           <div className="lg:col-span-2 space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-700 via-emerald-900 to-black flex items-center justify-center text-white border border-emerald-600/30">
-                <span className="font-serif text-lg font-bold text-amber-300">MM</span>
+              <div className="w-12 h-12 rounded-2xl bg-white p-1 shadow-md border-2 border-blue-400/40 flex items-center justify-center">
+                <img
+                  src="/images/maidsmagic-logo.jpg"
+                  alt="MaidsMagic Logo"
+                  className="w-full h-full object-contain"
+                />
               </div>
-              <span className="font-serif font-bold text-2xl text-white tracking-tight">
-                Maids<span className="text-emerald-400 font-sans">Magic</span>
-              </span>
+              <div>
+                <span className="font-serif font-bold text-2xl text-white tracking-tight">
+                  Maids<span className="text-blue-400 font-sans">Magic</span>
+                </span>
+                <p className="text-[10px] uppercase tracking-widest text-blue-400 font-bold">
+                  Riverside White-Glove Specialists
+                </p>
+              </div>
             </div>
 
             <p className="text-slate-400 text-sm leading-relaxed max-w-sm">
-              Riverside’s premier white-glove residential & turnover cleaning service. We deliver pristine, hotel-grade sanctuaries using certified eco-safe methods and vetted local cleaning artisans.
+              Riverside&apos;s premier white-glove residential & turnover cleaning service. We deliver immaculate sanctuaries using certified eco-safe methods and vetted local cleaning specialists.
             </p>
 
             <div className="space-y-2.5 pt-2 text-sm">
@@ -27,17 +36,17 @@ export function Footer() {
                 href={RIVERSIDE_COMPANY_INFO.googleMapsUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-start gap-2.5 text-slate-300 hover:text-emerald-400 transition-colors group"
+                className="flex items-start gap-2.5 text-slate-300 hover:text-blue-400 transition-colors group"
               >
-                <MapPin className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                <MapPin className="w-4 h-4 text-blue-400 shrink-0 mt-0.5" />
                 <span>{RIVERSIDE_COMPANY_INFO.address}</span>
               </a>
 
               <a
                 href={`tel:${RIVERSIDE_COMPANY_INFO.phone}`}
-                className="flex items-center gap-2.5 text-slate-300 hover:text-emerald-400 transition-colors"
+                className="flex items-center gap-2.5 text-slate-300 hover:text-blue-400 transition-colors"
               >
-                <Phone className="w-4 h-4 text-emerald-400 shrink-0" />
+                <Phone className="w-4 h-4 text-blue-400 shrink-0" />
                 <span>{RIVERSIDE_COMPANY_INFO.phoneFormatted}</span>
               </a>
 
@@ -49,49 +58,49 @@ export function Footer() {
 
             <div className="flex items-center gap-3 pt-2">
               <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-900 border border-slate-800 text-xs text-slate-300">
-                <Shield className="w-3.5 h-3.5 text-emerald-400" />
+                <Shield className="w-3.5 h-3.5 text-blue-400" />
                 <span>$2,000,000 Insured & Bonded</span>
               </div>
               <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-900 border border-slate-800 text-xs text-amber-300">
                 <Award className="w-3.5 h-3.5 text-amber-400" />
-                <span>100% Guarantee</span>
+                <span>100% Sparkle Guarantee</span>
               </div>
             </div>
           </div>
 
           {/* Cleaning Services Column */}
           <div>
-            <h3 className="text-white font-semibold text-sm tracking-wider uppercase mb-4 text-emerald-400">
-              Services
+            <h3 className="text-white font-semibold text-sm tracking-wider uppercase mb-4 text-blue-400">
+              Cleaning Packages
             </h3>
             <ul className="space-y-2.5 text-sm">
               <li>
-                <Link href="/#quote-engine" className="hover:text-emerald-400 transition-colors">
+                <Link href="/#book-now" className="hover:text-blue-400 transition-colors">
                   Luxury Deep Clean
                 </Link>
               </li>
               <li>
-                <Link href="/#quote-engine" className="hover:text-emerald-400 transition-colors">
+                <Link href="/#book-now" className="hover:text-blue-400 transition-colors">
                   Standard Maintenance Clean
                 </Link>
               </li>
               <li>
-                <Link href="/#quote-engine" className="hover:text-emerald-400 transition-colors">
+                <Link href="/#book-now" className="hover:text-blue-400 transition-colors">
                   Move-In / Move-Out Turnover
                 </Link>
               </li>
               <li>
-                <Link href="/#quote-engine" className="hover:text-emerald-400 transition-colors">
+                <Link href="/#book-now" className="hover:text-blue-400 transition-colors">
                   Airbnb & Vacation Rental Prep
                 </Link>
               </li>
               <li>
-                <Link href="/#quote-engine" className="hover:text-emerald-400 transition-colors">
+                <Link href="/#book-now" className="hover:text-blue-400 transition-colors">
                   Urgent Same-Day Clean
                 </Link>
               </li>
               <li>
-                <Link href="/#quote-engine" className="hover:text-emerald-400 transition-colors">
+                <Link href="/#book-now" className="hover:text-blue-400 transition-colors">
                   Pet Hair Extraction Detail
                 </Link>
               </li>
@@ -100,13 +109,13 @@ export function Footer() {
 
           {/* Riverside Service Neighborhoods */}
           <div>
-            <h3 className="text-white font-semibold text-sm tracking-wider uppercase mb-4 text-emerald-400">
+            <h3 className="text-white font-semibold text-sm tracking-wider uppercase mb-4 text-blue-400">
               Riverside Zones
             </h3>
             <ul className="space-y-2.5 text-sm">
               {RIVERSIDE_NEIGHBORHOODS.slice(0, 6).map((n) => (
                 <li key={n.name}>
-                  <Link href="/#neighborhoods" className="hover:text-emerald-400 transition-colors flex items-center justify-between">
+                  <Link href="/#neighborhoods" className="hover:text-blue-400 transition-colors flex items-center justify-between">
                     <span>{n.name}</span>
                     <span className="text-[11px] text-slate-500">{n.zip.split(" ")[0]}</span>
                   </Link>
@@ -115,29 +124,29 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Quick Links & Command Center */}
+          {/* Quick Links & CRM */}
           <div>
-            <h3 className="text-white font-semibold text-sm tracking-wider uppercase mb-4 text-emerald-400">
-              Explore & Admin
+            <h3 className="text-white font-semibold text-sm tracking-wider uppercase mb-4 text-blue-400">
+              Explore & CRM
             </h3>
             <ul className="space-y-2.5 text-sm">
               <li>
-                <Link href="/#quote-engine" className="hover:text-emerald-400 transition-colors">
-                  Instant Quote Engine
+                <Link href="/#book-now" className="hover:text-blue-400 transition-colors">
+                  Custom Booking Engine
                 </Link>
               </li>
               <li>
-                <Link href="/#transformations" className="hover:text-emerald-400 transition-colors">
+                <Link href="/#transformations" className="hover:text-blue-400 transition-colors">
                   Before & After Slider
                 </Link>
               </li>
               <li>
-                <Link href="/#checklist" className="hover:text-emerald-400 transition-colors">
-                  Standard vs Deep Checklist
+                <Link href="/#checklist" className="hover:text-blue-400 transition-colors">
+                  Cleaning Scope Checklist
                 </Link>
               </li>
               <li>
-                <Link href="/#reviews" className="hover:text-emerald-400 transition-colors">
+                <Link href="/#reviews" className="hover:text-blue-400 transition-colors">
                   Google Verified Reviews (4.96★)
                 </Link>
               </li>
@@ -146,7 +155,7 @@ export function Footer() {
                   href="/admin"
                   className="inline-flex items-center gap-1.5 text-amber-400 hover:text-amber-300 font-semibold"
                 >
-                  <span>Dispatch Command Center</span>
+                  <span>Admin CRM & Dispatcher</span>
                   <ArrowUpRight className="w-3.5 h-3.5" />
                 </Link>
               </li>

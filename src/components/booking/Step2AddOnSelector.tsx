@@ -15,7 +15,7 @@ const iconMap: Record<string, React.ReactNode> = {
   Refrigerator: <Refrigerator className="w-5 h-5 text-sky-500" />,
   Maximize2: <Maximize2 className="w-5 h-5 text-blue-500" />,
   Dog: <Dog className="w-5 h-5 text-orange-500" />,
-  Layers: <Layers className="w-5 h-5 text-emerald-600" />,
+  Layers: <Layers className="w-5 h-5 text-blue-600" />,
   Archive: <Archive className="w-5 h-5 text-indigo-500" />,
   Leaf: <Leaf className="w-5 h-5 text-emerald-600" />,
   Sun: <Sun className="w-5 h-5 text-amber-500" />,
@@ -33,14 +33,14 @@ export function Step2AddOnSelector({
         <div className="flex items-center justify-between">
           <div>
             <h3 className="text-sm font-bold text-slate-900">
-              Select Luxury Deep Clean Add-Ons
+              Select Deep Focus Add-On Areas
             </h3>
             <p className="text-xs text-slate-500">
-              Customize your booking with individual focus areas.
+              Personalize your clean with dedicated focus items.
             </p>
           </div>
-          <span className="px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 font-bold text-xs">
-            {selectedAddOns.length} Selected
+          <span className="px-3 py-1 rounded-full bg-blue-100 text-blue-900 font-bold text-xs">
+            {selectedAddOns.length} Focus Areas Selected
           </span>
         </div>
       </div>
@@ -56,29 +56,29 @@ export function Step2AddOnSelector({
               onClick={() => toggleAddOn(addon.slug)}
               className={`p-4 rounded-xl border-2 text-left transition-all relative flex items-start gap-3.5 ${
                 isSelected
-                  ? "border-emerald-600 bg-emerald-50/60 shadow-sm ring-1 ring-emerald-600"
+                  ? "border-blue-600 bg-blue-50/80 shadow-sm ring-1 ring-blue-600"
                   : "border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50/50"
               }`}
             >
               <div
                 className={`p-2.5 rounded-xl shrink-0 transition-colors ${
                   isSelected
-                    ? "bg-emerald-600 text-white"
+                    ? "bg-blue-600 text-white"
                     : "bg-slate-100 text-slate-600"
                 }`}
               >
                 {isSelected ? (
                   <Check className="w-5 h-5 text-white stroke-[3]" />
                 ) : (
-                  iconMap[addon.iconName] || <Flame className="w-5 h-5 text-emerald-600" />
+                  iconMap[addon.iconName] || <Flame className="w-5 h-5 text-blue-600" />
                 )}
               </div>
 
               <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between gap-2">
                   <h4 className="text-sm font-bold text-slate-900">{addon.name}</h4>
-                  <span className="font-mono font-bold text-emerald-800 text-sm shrink-0">
-                    +${addon.price}
+                  <span className="text-[10px] uppercase font-bold tracking-wider text-blue-700 bg-blue-100/70 px-2 py-0.5 rounded-md shrink-0">
+                    {addon.badgeText || "Included in Plan"}
                   </span>
                 </div>
                 <p className="text-xs text-slate-500 mt-1 leading-relaxed">
@@ -86,7 +86,7 @@ export function Step2AddOnSelector({
                 </p>
                 {addon.estimatedMinutes > 0 && (
                   <span className="inline-block text-[10px] font-semibold text-slate-400 mt-1.5">
-                    +~{addon.estimatedMinutes} mins detail
+                    +~{addon.estimatedMinutes} mins dedicated detail
                   </span>
                 )}
               </div>
@@ -109,7 +109,7 @@ export function Step2AddOnSelector({
         <button
           type="button"
           onClick={onNext}
-          className="px-8 py-3.5 rounded-xl bg-emerald-800 hover:bg-emerald-700 text-white font-bold text-sm shadow-md transition-all active:scale-95"
+          className="px-8 py-3.5 rounded-xl bg-blue-700 hover:bg-blue-600 text-white font-bold text-sm shadow-md transition-all active:scale-95"
         >
           Continue to Schedule & Contact →
         </button>

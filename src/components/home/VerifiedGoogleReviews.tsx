@@ -15,7 +15,6 @@ export function VerifiedGoogleReviews() {
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-14 space-y-4">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-100/80 border border-amber-300/60 text-amber-900 text-xs font-bold shadow-xs">
-            {/* Google G Colors Mini Representation */}
             <svg className="w-4 h-4" viewBox="0 0 24 24">
               <path
                 fill="#4285F4"
@@ -58,7 +57,7 @@ export function VerifiedGoogleReviews() {
               href={RIVERSIDE_COMPANY_INFO.googleMapsUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-800 hover:text-emerald-700 bg-emerald-100/80 px-3 py-1 rounded-full hover:underline transition-all"
+              className="inline-flex items-center gap-1 text-xs font-semibold text-blue-800 hover:text-blue-700 bg-blue-100/80 px-3 py-1 rounded-full hover:underline transition-all"
             >
               <span>View On Google Maps</span>
               <ExternalLink className="w-3 h-3" />
@@ -66,7 +65,7 @@ export function VerifiedGoogleReviews() {
           </div>
         </div>
 
-        {/* Reviews Grid (Desktop 3-Column / Mobile Horizontal Snap Scroll) */}
+        {/* Reviews Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
           {VERIFIED_GOOGLE_REVIEWS.map((review, index) => (
             <motion.div
@@ -76,7 +75,7 @@ export function VerifiedGoogleReviews() {
               viewport={{ once: true, margin: "-50px" }}
               transition={{ duration: 0.5, delay: index * 0.08 }}
               whileHover={{ y: -4, transition: { duration: 0.2 } }}
-              className="relative p-6 sm:p-7 rounded-2xl bg-white border border-slate-200/80 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between group hover:border-emerald-400/80 hover:ring-1 hover:ring-emerald-400/40"
+              className="relative p-6 sm:p-7 rounded-2xl bg-white border border-slate-200/80 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between group hover:border-blue-400/80 hover:ring-1 hover:ring-blue-400/40"
             >
               <div>
                 {/* Header of review card */}
@@ -94,7 +93,7 @@ export function VerifiedGoogleReviews() {
                         </h3>
                       </div>
                       <div className="flex items-center gap-1 text-[11px] text-slate-500 mt-0.5">
-                        <MapPin className="w-3 h-3 text-emerald-700 shrink-0" />
+                        <MapPin className="w-3 h-3 text-blue-700 shrink-0" />
                         <span>{review.neighborhood}</span>
                       </div>
                     </div>
@@ -106,9 +105,9 @@ export function VerifiedGoogleReviews() {
                     target="_blank"
                     rel="noopener noreferrer"
                     title="Verified Google Customer"
-                    className="p-1.5 rounded-lg bg-emerald-50 text-emerald-700 hover:bg-emerald-100 transition-colors flex items-center gap-1 text-[10px] font-bold"
+                    className="p-1.5 rounded-lg bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors flex items-center gap-1 text-[10px] font-bold"
                   >
-                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 stroke-[2.5]" />
+                    <CheckCircle2 className="w-3.5 h-3.5 text-blue-600 stroke-[2.5]" />
                     <span className="hidden sm:inline">Verified</span>
                   </a>
                 </div>
@@ -121,7 +120,7 @@ export function VerifiedGoogleReviews() {
                     ))}
                   </div>
 
-                  <span className="text-[11px] font-semibold text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded-full">
+                  <span className="text-[11px] font-semibold text-blue-800 bg-blue-50 px-2.5 py-0.5 rounded-full">
                     {review.serviceType}
                   </span>
                 </div>
@@ -139,7 +138,7 @@ export function VerifiedGoogleReviews() {
                   href={review.verifiedSourceUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:text-emerald-700 font-semibold flex items-center gap-1 transition-colors"
+                  className="hover:text-blue-700 font-semibold flex items-center gap-1 transition-colors"
                 >
                   <span>Google Review</span>
                   <ExternalLink className="w-3 h-3" />
@@ -150,7 +149,7 @@ export function VerifiedGoogleReviews() {
         </div>
 
         {/* Bottom GMB Info Card */}
-        <div className="mt-14 max-w-2xl mx-auto p-6 rounded-3xl bg-gradient-to-r from-emerald-900 to-slate-950 text-white shadow-xl flex flex-col sm:flex-row items-center justify-between gap-6">
+        <div className="mt-14 max-w-2xl mx-auto p-6 rounded-3xl bg-gradient-to-r from-blue-950 via-slate-900 to-slate-950 text-white shadow-xl flex flex-col sm:flex-row items-center justify-between gap-6 border border-blue-900/60">
           <div className="space-y-1 text-center sm:text-left">
             <span className="text-xs font-bold uppercase tracking-wider text-amber-300">
               Official Riverside Google Business Profile

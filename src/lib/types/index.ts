@@ -2,7 +2,9 @@ export type CleaningFrequency = 'one_time' | 'weekly' | 'bi_weekly' | 'monthly';
 
 export type BookingStatus = 'pending' | 'confirmed' | 'dispatched' | 'in_progress' | 'completed' | 'cancelled';
 
-export type QuoteStatus = 'calculated' | 'lead_captured' | 'contacted' | 'converted' | 'abandoned';
+export type QuoteStatus = 'inquiry_received' | 'consultation_scheduled' | 'converted' | 'follow_up_needed' | 'archived';
+
+export type PaymentStatus = 'unpaid' | 'invoiced' | 'paid_card' | 'paid_cash' | 'complimentary';
 
 export type ChatSenderType = 'visitor' | 'agent' | 'system';
 
@@ -14,12 +16,10 @@ export interface ServiceItem {
   title: string;
   tagline: string;
   description: string;
-  basePrice: number;
-  pricePerSqft: number;
-  pricePerBed: number;
-  pricePerBath: number;
   estimatedHoursBase: number;
   iconName: string;
+  inclusions: string[];
+  badgeText?: string;
   isActive: boolean;
 }
 
@@ -28,9 +28,9 @@ export interface AddOnItem {
   slug: string;
   name: string;
   description: string;
-  price: number;
   estimatedMinutes: number;
   iconName: string;
+  badgeText?: string;
   isActive: boolean;
 }
 
@@ -44,6 +44,7 @@ export interface CleanerSpecialist {
   rating: number;
   completedJobs: number;
   assignedZipCodes: string[];
+  specialty: string;
   isActive: boolean;
 }
 
@@ -59,12 +60,8 @@ export interface BookingLead {
   bedrooms: number;
   bathrooms: number;
   halfBathrooms: number;
-  addOns: { slug: string; name: string; price: number }[];
+  addOns: { slug: string; name: string }[];
   frequency: CleaningFrequency;
-  frequencyDiscountPercent: number;
-  subtotal: number;
-  discountAmount: number;
-  finalTotal: number;
   serviceDate: string; // YYYY-MM-DD
   serviceTimeSlot: string;
   addressLine1: string;
@@ -78,6 +75,10 @@ export interface BookingLead {
   status: BookingStatus;
   cleanerId?: string;
   assignedCleaner?: CleanerSpecialist;
+  internalCrmNotes?: string;
+  paymentStatus?: PaymentStatus;
+  priorityTag?: 'Standard' | 'VIP Riverside' | 'Urgent Turnover';
+  estimatedHours: number;
   createdAt: string;
   updatedAt: string;
 }
@@ -93,10 +94,10 @@ export interface QuoteLead {
   serviceType: string;
   frequency: CleaningFrequency;
   addOns: string[];
-  estimatedPrice: number;
   zipCode?: string;
   neighborhood?: string;
   status: QuoteStatus;
+  leadSource?: string;
   recoveryEmailSent?: boolean;
   recoverySmsSent?: boolean;
   createdAt: string;
@@ -135,4 +136,18 @@ export interface ChatConversation {
   lastMessageAt: string;
   createdAt: string;
   messages: ChatMessage[];
+}
+
+export interface CustomerProfile {
+  id: string;
+  name: string;
+  phone: string;
+  email: string;
+  address: string;
+  neighborhood: string;
+  totalBookings: number;
+  frequency: CleaningFrequency;
+  notes: string;
+  preferredCleaner?: string;
+  tags: string[];
 }

@@ -1,7 +1,7 @@
 "use server";
 
 import { bookingFormSchema, BookingFormValues } from "@/lib/validations/booking.schema";
-import { calculateCleaningQuote } from "@/lib/utils/pricing-calculator";
+import { SERVICES_CATALOG, ADDONS_CATALOG } from "@/lib/constants/riverside-data";
 import { createServerClient } from "@/lib/supabase/server";
 import { isSupabaseConfigured } from "@/lib/supabase/client";
 
@@ -17,9 +17,8 @@ export interface BookingResponse {
     serviceTitle: string;
     serviceDate: string;
     serviceTimeSlot: string;
-    finalTotal: number;
-    discountAmount: number;
     address: string;
+    estimatedHours: number;
   };
   errors?: Record<string, string[]>;
 }
@@ -30,62 +29,34 @@ export async function createBookingAction(formData: unknown): Promise<BookingRes
   if (!result.success) {
     return {
       success: false,
-      message: "Please correct the highlighted errors in the form.",
+      message: "Please correct the highlighted fields.",
       errors: result.error.flatten().fieldErrors,
     };
   }
 
   const data: BookingFormValues = result.data;
+  const service =
+    SERVICES_CATALOG.find((s) => s.slug === data.serviceSlug) || SERVICES_CATALOG[0];
 
-  // Server-side authoritative price calculation
-  const quote = calculateCleaningQuote({
-    serviceSlug: data.serviceSlug,
-    squareFootage: data.squareFootage,
-    bedrooms: data.bedrooms,
-    bathrooms: data.bathrooms,
-    halfBathrooms: data.halfBathrooms,
-    selectedAddOns: data.selectedAddOns,
-    frequency: data.frequency,
-  });
+  const addOnsList = data.selectedAddOns
+    .map((slug) => {
+      const addon = ADDONS_CATALOG.find((a) => a.slug === slug);
+      if (!addon) return null;
+      return { slug: addon.slug, name: addon.name };
+    })
+    .filter(Boolean) as { slug: string; name: string }[];
+
+  // Calculate estimated crew duration
+  const baseHours = service.estimatedHoursBase;
+  const sqftHours = (data.squareFootage / 1000) * 0.65;
+  const bedBathHours = data.bedrooms * 0.25 + data.bathrooms * 0.35;
+  const estimatedHours = Math.round((baseHours + sqftHours + bedBathHours) * 2) / 2;
 
   const randomRefDigits = Math.floor(1000 + Math.random() * 9000);
   const bookingReference = `MM-RIV-${randomRefDigits}`;
   const bookingId = `bk-${Date.now()}`;
 
-  const bookingPayload = {
-    id: bookingId,
-    bookingReference,
-    customerName: data.fullName,
-    customerEmail: data.email,
-    customerPhone: data.phone,
-    serviceId: data.serviceSlug,
-    serviceTitle: quote.serviceTitle,
-    squareFootage: data.squareFootage,
-    bedrooms: data.bedrooms,
-    bathrooms: data.bathrooms,
-    halfBathrooms: data.halfBathrooms,
-    addOns: quote.addOnsList,
-    frequency: data.frequency,
-    frequencyDiscountPercent: quote.frequencyDiscountPercent,
-    subtotal: quote.subtotal,
-    discountAmount: quote.discountAmount,
-    finalTotal: quote.finalTotal,
-    serviceDate: data.serviceDate,
-    serviceTimeSlot: data.serviceTimeSlot,
-    addressLine1: data.addressLine1,
-    addressLine2: data.addressLine2 || "",
-    city: data.city || "Riverside",
-    state: data.state || "CA",
-    zipCode: data.zipCode,
-    neighborhood: data.neighborhood || "Riverside Metro",
-    entryInstructions: data.entryInstructions || "",
-    specialNotes: data.specialNotes || "",
-    status: "pending" as const,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  };
-
-  // If Supabase is configured, write directly to PostgreSQL
+  // If Supabase is configured, record in database
   if (isSupabaseConfigured()) {
     try {
       const supabase = createServerClient();
@@ -95,50 +66,45 @@ export async function createBookingAction(formData: unknown): Promise<BookingRes
           customer_name: data.fullName,
           customer_email: data.email,
           customer_phone: data.phone,
-          service_title: quote.serviceTitle,
+          service_title: service.title,
           square_footage: data.squareFootage,
           bedrooms: data.bedrooms,
           bathrooms: data.bathrooms,
           half_bathrooms: data.halfBathrooms,
-          add_ons: quote.addOnsList,
+          add_ons: addOnsList,
           frequency: data.frequency,
-          frequency_discount_percent: quote.frequencyDiscountPercent,
-          subtotal: quote.subtotal,
-          discount_amount: quote.discountAmount,
-          final_total: quote.finalTotal,
           service_date: data.serviceDate,
           service_time_slot: data.serviceTimeSlot,
           address_line1: data.addressLine1,
           address_line2: data.addressLine2,
-          city: data.city,
-          state: data.state,
+          city: data.city || "Riverside",
+          state: data.state || "CA",
           zip_code: data.zipCode,
-          neighborhood: data.neighborhood,
+          neighborhood: data.neighborhood || "Riverside",
           entry_instructions: data.entryInstructions,
           special_notes: data.specialNotes,
           status: "pending",
         },
       ]);
     } catch (err) {
-      console.warn("Supabase insertion notice (using local storage sync):", err);
+      console.warn("Supabase insertion notice:", err);
     }
   }
 
   return {
     success: true,
-    message: `Booking successfully created! Your confirmation number is ${bookingReference}.`,
+    message: `Your booking request has been confirmed! Confirmation: ${bookingReference}. Our Riverside concierge will hold this slot with zero upfront payment.`,
     booking: {
       id: bookingId,
       bookingReference,
       customerName: data.fullName,
       customerEmail: data.email,
       customerPhone: data.phone,
-      serviceTitle: quote.serviceTitle,
+      serviceTitle: service.title,
       serviceDate: data.serviceDate,
       serviceTimeSlot: data.serviceTimeSlot,
-      finalTotal: quote.finalTotal,
-      discountAmount: quote.discountAmount,
-      address: `${data.addressLine1}, ${data.city}, ${data.state} ${data.zipCode}`,
+      address: `${data.addressLine1}, ${data.city || "Riverside"}, CA ${data.zipCode}`,
+      estimatedHours,
     },
   };
 }

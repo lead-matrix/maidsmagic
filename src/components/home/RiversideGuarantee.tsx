@@ -1,20 +1,20 @@
 "use client";
 
-import { Shield, Sparkles, CheckCircle2, Award, Clock, HeartHandshake } from "lucide-react";
+import { Shield, Sparkles, CheckCircle2, Award, HeartHandshake } from "lucide-react";
 import { RIVERSIDE_COMPANY_INFO } from "@/lib/constants/riverside-data";
 
 export function RiversideGuarantee() {
   return (
-    <section className="py-20 bg-gradient-to-b from-white to-emerald-50/40 relative">
+    <section className="py-20 bg-gradient-to-b from-white to-blue-50/40 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="rounded-3xl bg-gradient-to-br from-emerald-950 via-slate-900 to-slate-950 text-white p-8 sm:p-12 lg:p-16 relative overflow-hidden shadow-2xl border border-emerald-800/40">
+        <div className="rounded-3xl bg-gradient-to-br from-blue-950 via-slate-900 to-slate-950 text-white p-8 sm:p-12 lg:p-16 relative overflow-hidden shadow-2xl border border-blue-800/40">
           {/* Background Decorative Rings */}
-          <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-600/10 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute top-0 right-0 w-96 h-96 bg-blue-600/15 rounded-full blur-3xl pointer-events-none" />
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
             {/* Left Content */}
             <div className="lg:col-span-7 space-y-6">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-900/80 text-amber-300 text-xs font-bold border border-emerald-700/60">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-900/80 text-amber-300 text-xs font-bold border border-blue-700/60">
                 <Award className="w-4 h-4" />
                 <span>The MaidsMagic 100% Sparkle Guarantee</span>
               </div>
@@ -29,7 +29,7 @@ export function RiversideGuarantee() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
                 <div className="flex items-start gap-3">
-                  <div className="p-2 rounded-xl bg-emerald-900/60 text-emerald-400 border border-emerald-800">
+                  <div className="p-2 rounded-xl bg-blue-900/60 text-blue-400 border border-blue-800">
                     <Shield className="w-5 h-5" />
                   </div>
                   <div>
@@ -39,7 +39,7 @@ export function RiversideGuarantee() {
                 </div>
 
                 <div className="flex items-start gap-3">
-                  <div className="p-2 rounded-xl bg-emerald-900/60 text-emerald-400 border border-emerald-800">
+                  <div className="p-2 rounded-xl bg-blue-900/60 text-blue-400 border border-blue-800">
                     <HeartHandshake className="w-5 h-5" />
                   </div>
                   <div>
@@ -52,13 +52,13 @@ export function RiversideGuarantee() {
 
             {/* Right Badge Graphic */}
             <div className="lg:col-span-5 flex justify-center">
-              <div className="relative p-8 rounded-3xl bg-slate-900/90 border border-emerald-700/50 text-center max-w-sm w-full space-y-4 shadow-xl">
+              <div className="relative p-8 rounded-3xl bg-slate-900/90 border border-blue-700/50 text-center max-w-sm w-full space-y-4 shadow-xl">
                 <div className="w-20 h-20 rounded-2xl bg-gradient-to-tr from-amber-500 to-amber-300 text-slate-950 flex items-center justify-center mx-auto shadow-lg">
                   <Sparkles className="w-10 h-10 stroke-[2.5]" />
                 </div>
 
                 <div>
-                  <span className="text-xs uppercase font-bold tracking-widest text-emerald-400">
+                  <span className="text-xs uppercase font-bold tracking-widest text-blue-400">
                     Riverside Standard
                   </span>
                   <h3 className="text-2xl font-serif font-bold text-white mt-1">
@@ -70,8 +70,8 @@ export function RiversideGuarantee() {
                 </div>
 
                 <a
-                  href="#quote-engine"
-                  className="w-full py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-400 hover:to-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-md transition-all"
+                  href="#book-now"
+                  className="w-full py-3 rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-md transition-all"
                 >
                   <span>Book With Total Confidence</span>
                 </a>
